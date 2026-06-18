@@ -1,14 +1,3 @@
-// Parallel 2D heat-diffusion simulation — std::thread version (baseline).
-//
-// This is the original implementation: it partitions the interior rows into
-// per-thread bands and spawns/joins std::thread objects EVERY time step. It is
-// kept here so you can benchmark it head-to-head against the OpenMP version
-// (heat_omp.cpp) on the exact same machine, grid size, and step count.
-//
-// Build:  see CMakeLists.txt, or:
-//         g++ -O2 -pthread heat_threads.cpp -o heat_threads
-// Run:    ./heat_threads [N] [STEPS] [THREADS]   (defaults: 1000 500 1)
-
 #include <iostream>
 #include <vector>
 #include <thread>
@@ -18,7 +7,7 @@
 
 using Grid = std::vector<std::vector<double>>;
 
-// One thread runs this: update interior rows [rowStart, rowEnd).
+
 void updateRows(const Grid& curr, Grid& next, int N, double alpha,
                 int rowStart, int rowEnd) {
     for (int i = rowStart; i < rowEnd; ++i)
