@@ -1,0 +1,33 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  build-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - if: runner.os == 'macOS'
+        run: brew install libomp
+      - run: >
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DHEAT_NATIVE=OFF
+          ${{ runner.os == 'macOS' && '-DOpenMP_ROOT=$(brew --prefix libomp)' || '' }}
+      - run: cmake --build build -j
+      - run: ctest --test-dir build --output-on-failure
+      - run: ./build/heat --all --n 400 --steps 200 --threads 1,2,4
+  sanitizers:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        san: [thread, address]
+    steps:
+      - uses: actions/checkout@v4
+      # TSAN cannot see libomp's internal synchronisation (false positives unless
+      # libomp is built with TSAN support), so the sanitizer jobs cover the
+      # std::thread backends with OpenMP disabled.
+      - run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DHEAT_SANITIZE=${{ matrix.san }} -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=ON
+      - run: cmake --build build -j
+      - run: ctest --test-dir build --output-on-failure
+        env:
+          TSAN_OPTIONS: halt_on_error=1
