@@ -1,5 +1,7 @@
 # parallel-heat-diffusion
 
+> **Sep 2026 (v2):** four backends on one flat grid, 320 combinations bitwise-identical, exact mirror symmetry, a STREAM probe that quantifies the roofline (~1.9× is the ceiling), spin barrier 2.89× on a cache-resident grid.
+
 A 2-D heat-diffusion solver (5-point finite-difference stencil) parallelised **four ways** —
 serial, `std::thread` spawned per step, persistent `std::thread` workers with a spin barrier,
 and OpenMP — benchmarked head-to-head on identical inputs, **proven bitwise-identical** across
