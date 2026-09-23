@@ -54,11 +54,14 @@ bool parse(int argc, char** argv, Args& a) {
         } else if (k == "--all") {
             a.backends = heat::all_backends();
         } else if (k == "--n") {
-            if (!val(v)) return false; a.n = std::strtoull(v.c_str(), nullptr, 10);
+            if (!val(v)) return false;
+            a.n = std::strtoull(v.c_str(), nullptr, 10);
         } else if (k == "--steps") {
-            if (!val(v)) return false; a.steps = std::atoi(v.c_str());
+            if (!val(v)) return false;
+            a.steps = std::atoi(v.c_str());
         } else if (k == "--reps") {
-            if (!val(v)) return false; a.reps = std::atoi(v.c_str());
+            if (!val(v)) return false;
+            a.reps = std::atoi(v.c_str());
         } else if (k == "--threads") {
             if (!val(v)) return false;
             a.threads.clear();

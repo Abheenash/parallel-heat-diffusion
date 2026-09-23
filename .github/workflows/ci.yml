@@ -50,7 +50,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: install
-        run: sudo apt-get update && sudo apt-get install -y clang-tidy
+        # libomp-dev too: this project has an OpenMP backend, and without the
+        # headers clang-tidy cannot parse it at all — it reports "'omp.h' file
+        # not found" as a compilation error, not a finding.
+        run: sudo apt-get update && sudo apt-get install -y clang-tidy libomp-dev
       - name: configure (export compile_commands.json)
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
       - name: analyse
