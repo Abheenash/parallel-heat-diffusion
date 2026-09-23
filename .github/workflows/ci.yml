@@ -7,7 +7,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - if: runner.os == 'macOS'
         run: brew install libomp
       - run: >
@@ -22,7 +22,7 @@ jobs:
       matrix:
         san: [thread, address]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # TSAN cannot see libomp's internal synchronisation (false positives unless
       # libomp is built with TSAN support), so the sanitizer jobs cover the
       # std::thread backends with OpenMP disabled.
